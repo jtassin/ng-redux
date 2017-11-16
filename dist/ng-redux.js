@@ -2829,9 +2829,11 @@ function toNumber(value) {
 var lodash_debounce = debounce;
 
 function digestMiddleware($rootScope, debounceConfig) {
-  var debouncedFunction = $rootScope.$evalAsync;
+  var debouncedFunction = function debouncedFunction(expr) {
+    $rootScope.$evalAsync(expr);
+  };
   if (debounceConfig && debounceConfig.wait && debounceConfig.wait > 0) {
-    debouncedFunction = lodash_debounce($rootScope.$evalAsync, debounceConfig.wait, { maxWait: debounceConfig.maxWait });
+    debouncedFunction = lodash_debounce(debouncedFunction, debounceConfig.wait, { maxWait: debounceConfig.maxWait });
   }
   return function (store) {
     return function (next) {
